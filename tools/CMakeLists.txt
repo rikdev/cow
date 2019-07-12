@@ -1,0 +1,13 @@
+get_target_property(OPTIONAL_LIBRARY_TARGET_SOURCES ${PROJECT_NAME}::Optional INTERFACE_SOURCES)
+
+find_program(CLANG_TIDY_PROGRAM_PATH clang-tidy)
+add_custom_target(
+  clang-tidy
+  COMMAND ${CLANG_TIDY_PROGRAM_PATH} -p ${CMAKE_CURRENT_BINARY_DIR} ${OPTIONAL_LIBRARY_TARGET_SOURCES}
+)
+
+find_program(CLANG_DOC_PROGRAM_PATH clang-doc)
+add_custom_target(
+  clang-doc
+  COMMAND ${CLANG_DOC_PROGRAM_PATH} -format=md -p ${CMAKE_CURRENT_BINARY_DIR} ${OPTIONAL_LIBRARY_TARGET_SOURCES}
+)

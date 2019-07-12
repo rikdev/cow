@@ -1,0 +1,62 @@
+version: '{build}'
+
+environment:
+  matrix:
+    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu1804
+      CXX_STANDARD: 14
+      CXX: clang++-8
+    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu1804
+      CXX_STANDARD: 14
+      CXX: g++-9
+      CXXFLAGS: -fconcepts
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      CXX_STANDARD: 14
+    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu1804
+      CXX_STANDARD: 17
+      CXX: clang++-8
+    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu1804
+      CXX_STANDARD: 17
+      CXX: g++-9
+      CXXFLAGS: -fconcepts
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      CXX_STANDARD: 17
+    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu1804
+      CXX_STANDARD: 20
+      CXX: clang++-8
+    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu1804
+      CXX_STANDARD: 20
+      CXX: g++-9
+      CXXFLAGS: -fconcepts
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      CXX_STANDARD: 20
+
+cache:
+  - build/_deps -> tests/FetchDependencies.cmake
+
+install:
+  - sh: |
+      if [[ "${CXX}" == 'clang++-8' ]]; then
+        wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+        sudo add-apt-repository 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-8 main'
+        sudo apt-get install -y clang++-8 clang-tidy-8
+      fi
+
+configuration:
+  - Release
+
+build_script:
+  - ps: |
+      Set-Location "$env:APPVEYOR_BUILD_FOLDER"
+      New-Item -Path build -ItemType Directory
+      Set-Location build
+      # build
+      cmake .. `
+        -DFETCH_DEPENDENCIES=ON `
+        -DBUILD_TESTING=ON `
+        -DBUILD_EXAMPLES=ON `
+        -DCMAKE_CXX_STANDARD="$env:CXX_STANDARD" `
+        -DCMAKE_BUILD_TYPE="$env:CONFIGURATION"
+      cmake --build . --config "$env:CONFIGURATION"
+
+test_script:
+  - ps: ctest --build-config "$env:CONFIGURATION"
