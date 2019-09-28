@@ -296,7 +296,7 @@ using detail::compatibility::in_place_t;
 using detail::compatibility::in_place;
 
 template<typename T, std::size_t MaxInlineStorageSize = sizeof(std::shared_ptr<T>)>
-constexpr bool use_inline_storage_v = use_inline_storage<T, MaxInlineStorageSize>::value;
+constexpr bool use_inline_storage_v = use_inline_storage<T, MaxInlineStorageSize>::value; // NOLINT(misc-definitions-in-headers)
 
 /// The class `optional` implements copy-on-write storage and provides `std::optional` like interface.
 /// \tparam T Value type.
