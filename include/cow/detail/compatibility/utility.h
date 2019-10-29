@@ -7,8 +7,8 @@ namespace detail {
 namespace compatibility {
 
 #ifdef COW_CPP_LIB_OPTIONAL
-using std::in_place_t;
-using std::in_place;
+using std::in_place_t; // NOLINT(misc-unused-using-decls)
+using std::in_place; // NOLINT(misc-unused-using-decls)
 #else
 struct in_place_t {};
 constexpr in_place_t in_place;
