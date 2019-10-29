@@ -11,7 +11,7 @@
 #include <type_traits>
 #include <utility>
 
-#if __cpp_lib_optional
+#ifdef COW_CPP_LIB_OPTIONAL
 #include <optional>
 #endif
 
@@ -246,7 +246,7 @@ struct hash<cow::optional<T, UseInlineStorage>>;
 
 namespace cow {
 
-#if __cpp_lib_optional
+#ifdef COW_CPP_LIB_OPTIONAL
 // allow_inplace_placement
 template<typename T>
 struct allow_inplace_placement
@@ -468,7 +468,7 @@ public:
 	{}
 
 
-#if __cpp_lib_optional
+#ifdef COW_CPP_LIB_OPTIONAL
 	// non-cow constructor
 	template<typename U, std::enable_if_t<optional_detail::unwrapping<T, optional<U, true>>::allow_copy, int> = 0>
 	explicit optional(const optional<U, true>& other)
@@ -491,7 +491,7 @@ public:
 		: data_{other ? std::make_shared<value_type>(*std::move(other)) : nullptr}
 	{}
 
-#if __cpp_lib_optional
+#ifdef COW_CPP_LIB_OPTIONAL
 	// non-cow constructor
 	template<typename U, std::enable_if_t<optional_detail::unwrapping<T, optional<U, true>>::allow_move, int> = 0>
 	explicit optional(optional<U, true>&& other)
@@ -548,7 +548,7 @@ public:
 		return *this;
 	}
 
-#if __cpp_lib_optional
+#ifdef COW_CPP_LIB_OPTIONAL
 	// non-cow assignment
 	template<
 		typename U = T, std::enable_if_t<optional_detail::assing_unwrapping<T, optional<U, true>>::allow_copy, int> = 0>
@@ -591,7 +591,7 @@ public:
 		return *this;
 	}
 
-#if __cpp_lib_optional
+#ifdef COW_CPP_LIB_OPTIONAL
 	// non-cow assignment
 	template<
 		typename U = T, std::enable_if_t<optional_detail::assing_unwrapping<T, optional<U, true>>::allow_move, int> = 0>
@@ -706,7 +706,7 @@ void swap(optional<T, false>& lhs, optional<T, false>& rhs) noexcept
 	lhs.swap(rhs);
 }
 
-#if __cpp_lib_optional
+#ifdef COW_CPP_LIB_OPTIONAL
 template<typename T>
 class optional<T, true> {
 	template<typename, bool>

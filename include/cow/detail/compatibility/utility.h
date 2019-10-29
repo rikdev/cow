@@ -1,11 +1,12 @@
 #pragma once
+#include "compile_features.h"
 #include <utility>
 
 namespace cow {
 namespace detail {
 namespace compatibility {
 
-#if __cpp_lib_optional
+#ifdef COW_CPP_LIB_OPTIONAL
 using std::in_place_t;
 using std::in_place;
 #else
